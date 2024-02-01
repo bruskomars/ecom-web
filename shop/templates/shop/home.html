@@ -76,12 +76,8 @@
                 <div class="card">
                     <img src="{{ product.image }}" alt="" class="card-img-top">
                     <div class="card-body">
-                        <div class="card-title">
-                            {{ product.name }}
-                        </div>
-                        <div class="card-text">
-                            $ {{ product.price }}
-                        </div>
+                        <div class="card-title" id="item-{{ product.id }}">{{ product.name }}</div>
+                        <div class="card-text" >$ <span id="price-{{ product.id }}">{{ product.price }}</span></div>
 
                         <a href="{% url 'detail' product.id %}" class="btn btn-warning">View</a>
                         <a class="btn atc btn-warning" id="{{ product.id }}">Add to cart</a>
@@ -127,12 +123,16 @@
 
     $(document).on('click', '.atc', function(){
         var item_id = this.id.toString();
-        console.log(item_id)
 
         if (cart[item_id] != undefined){
-            cart[item_id] += 1;
+            quantity = cart[item_id][0] + 1;
+            cart[item_id][0] = quantity;
+            cart[item_id][2] += parseFloat(document.getElementById('price-'+item_id).innerHTML);
         } else {
-            cart[item_id] = 1;
+            quantity = 1;
+            price = parseFloat(document.getElementById('price-'+item_id).innerHTML);
+            name = document.getElementById('item-'+item_id).innerHTML;
+            cart[item_id] = [quantity, name, price];
         };
 
         console.log(cart)
@@ -141,11 +141,24 @@
         document.getElementById('cart').innerHTML = "Cart("+Object.keys(cart).length+")";
     });
 
-    $(function () {
-      $('[data-toggle="popover"]').popover();
+    DisplayCart(cart);
 
-      document.getElementById('cart').setAttribute('data-content', '<h5>This is you cart</h5>')
-    })
+    function DisplayCart(cart){
+        var cartLabel = '';
+        cartLabel += '<h5>This is you cart</h5>';
+        var cartIndex = 1;
+
+        for (var x in cart){
+            cartLabel += cartIndex+ " ";
+            cartLabel += document.getElementById('item-'+ x).innerHTML + " Qty:" + cart[x][0]+ "<br>";
+            cartIndex += 1;
+        }
+        cartLabel += "<a href='/checkout' class='btn btn-warning' id='checkout'>Checkout</a>"
+
+        document.getElementById('cart').setAttribute('data-content', cartLabel);
+        $('[data-toggle="popover"]').popover();
+    }
+
 </script>
 
 </html>
