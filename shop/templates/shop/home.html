@@ -148,9 +148,11 @@
         cartLabel += '<h5>This is you cart</h5>';
         var cartIndex = 1;
 
-        for (var x in cart){
+        let cartObject = JSON.parse(localStorage.getItem('cart'));
+
+        for (var x in cartObject){
             cartLabel += cartIndex+ " ";
-            cartLabel += document.getElementById('item-'+ x).innerHTML + " Qty:" + cart[x][0]+ "<br>";
+            cartLabel += cartObject[x][1] + " Qty:" + cartObject[x][0]+ "<br>";
             cartIndex += 1;
         }
         cartLabel += "<a href='/checkout' class='btn btn-warning' id='checkout'>Checkout</a>"

@@ -39,6 +39,7 @@ def checkout(request):
         city = request.POST.get('city')
         state = request.POST.get('state')
         zipcode = request.POST.get('zipcode')
+        total = request.POST.get('total')
 
         order = Order(name=name,
                       items=items,
@@ -47,6 +48,7 @@ def checkout(request):
                       city=city,
                       state=state,
                       zipcode=zipcode,
+                      total=total,
                       )
         order.save()
 
